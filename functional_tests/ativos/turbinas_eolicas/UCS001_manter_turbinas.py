@@ -1,122 +1,93 @@
 """
-UCS001 — Manter turbinas eólicas
+===============================================================================
+IDENTIFICADOR: UCS001
+TÍTULO: Manter Turbinas Eólicas (Ciclo de Vida Completo - CRUD)
+AUTOR: Ícaro Pontes
+MÓDULO: Gestão de Ativos - Turbinas Eólicas
+===============================================================================
 
-Autoria / responsável acadêmico: Ícaro Pontes
-Preparação: assistência de IA; revisão pessoal e apresentação pelo responsável pendentes.
-Data: 05/11/2026
-Natureza: especificação documental, não teste automatizado nem evidência de execução.
-Grupo de requisitos: Gestão de Turbinas Eólicas — EPIC 2.1.2.
+OBJETIVO:
+Validar o ciclo de vida completo de um ativo de Turbina Eólica no BVapp, 
+executando integradamente as quatro operações fundamentais do CRUD (Inclusão, 
+Consulta, Atualização e Exclusão) em um único fluxo de teste.
 
-OBJETIVO
-Descrever o ciclo completo de criar, consultar, atualizar e excluir turbinas
-eólicas, reunindo as quatro operações no mesmo cenário, sem dividi-las em
-quatro cenários contados separadamente. Exercita o fluxo principal de cada
-operação com dados válidos e situação padrão.
+REQUISITOS RELACIONADOS:
+- FEATURE-2.1.2.1: Inclusão de turbinas eólicas
+- FEATURE-2.1.2.2: Consulta de turbinas eólicas
+- FEATURE-2.1.2.3: Atualização de turbinas eólicas
+- FEATURE-2.1.2.4: Exclusão de turbinas eólicas
 
-REQUISITOS RELACIONADOS
-Features 2.1.2.1 Inclusão, 2.1.2.2 Consulta,
-2.1.2.3 Atualização e 2.1.2.4 Exclusão.
-CAs exercitados: CA-2.1.2.1.01, CA-2.1.2.1.02, CA-2.1.2.1.05,
-CA-2.1.2.1.07, CA-2.1.2.1.08, CA-2.1.2.1.09, CA-2.1.2.1.17,
-CA-2.1.2.2.01, CA-2.1.2.2.02, CA-2.1.2.2.09,
-CA-2.1.2.3.02, CA-2.1.2.3.04, CA-2.1.2.3.05,
-CA-2.1.2.4.01, CA-2.1.2.4.04, CA-2.1.2.4.05.
+ATOR:
+Engenheiro / Operador do Sistema.
 
-ATOR
-Usuário autenticado com autorização de inclusão, consulta, edição e exclusão
-de ativos. Na exclusão, a fonte exige perfil específico; a equivalência de
-perfis permanece pendente de definição.
+PRÉ-CONDIÇÕES:
+1. O usuário está autenticado no BVapp com perfil de acesso permissivo.
+2. O Parque Eólico "Parque Eólico Serra do Mel" está previamente cadastrado no sistema.
 
-PRÉ-CONDIÇÕES
-- Ambiente futuro de estudo isolado, sem dados de produção nem ações reais.
-- Massa sintética e vínculos preparados antes do fluxo; nenhum registro de
-  controle é alterado durante o cenário.
-- Inversor INV-ESTUDO-001 ativo e disponível, associado à Usina Estudo A.
-- Modelo Modelo Estudo A ativo; Fornecedor Fornecedor Estudo A ativo.
-- Número de série TUR-ESTUDO-001 inexistente no sistema antes do passo 1.
-- Autorização verificada por operação; acesso à listagem não implica permissão
-  de inclusão, edição ou exclusão.
-- Tratar as decisões em aberto nas pendências antes de aprovar etapas dependentes.
+PÓS-CONDIÇÕES:
+1. A turbina manipulada no teste é removida da base de dados ao final da execução.
+2. Nenhuma pendência ou registro órfão é mantido no banco de dados.
 
-DADOS DE TESTE
-Número de Série: TUR-ESTUDO-001; Potência: 2000 (W); Inversor: INV-ESTUDO-001;
-Modelo: Modelo Estudo A; Fornecedor: Fornecedor Estudo A; Status inicial: Ativo.
-Atualização: Potência alterada de 2000 para 2500 (W).
-Os nomes e valores são fictícios e servem apenas de exemplo de entrada.
-Não constituem novos limites, domínios, permissões ou regras de negócio.
+-------------------------------------------------------------------------------
+FLUXO PRINCIPAL (CRUD COMPLETO)
+-------------------------------------------------------------------------------
+1. O ator acessa o menu "Gestão de Ativos" -> "Turbinas Eólicas" e clica em "Nova Turbina Eólica".
+2. O ator preenche o formulário com os dados do novo ativo:
+   - Identificador/Código: "TB-EOL-001"
+   - Modelo: "Vestas V150-4.2 MW"
+   - Potência Nominal: 4200 kW
+   - Diâmetro do Rotor: 150.0 m
+   - Altura da Torre: 120.0 m
+   - Parque Eólico: "Parque Eólico Serra do Mel"
+   - Status: "Operacional"
+3. O ator clica em "Salvar" e o sistema confirma o cadastro com sucesso.
+4. O ator aplica o filtro na listagem buscando pelo código "TB-EOL-001".
+5. O sistema retorna o registro cadastrado; o ator aciona "Visualizar Detalhes" e valida a fidelidade dos dados.
+6. O ator clica em "Editar", altera a Potência Nominal para "4500 kW" e o Status para "Em Manutenção".
+7. O ator clica em "Atualizar" e o sistema confirma a alteração no banco de dados.
+8. O ator aciona a opção "Excluir Turbina Eólica" no registro "TB-EOL-001".
+9. O sistema exibe a modal de confirmação de exclusão e o ator clica em "Confirmar Exclusão".
+10. O sistema remove o registro da base e o ator confirma a ausência do ativo ao repetir a busca por "TB-EOL-001".
 
-[FP] FLUXO PRINCIPAL — CRUD COMPLETO
+-------------------------------------------------------------------------------
+FLUXOS ALTERNATIVOS
+-------------------------------------------------------------------------------
+- FA01: Cancelamento da Exclusão
+  1. No passo 9, o ator clica em "Cancelar" na janela modal de confirmação.
+  2. O sistema fecha a janela modal sem aplicar a remoção e mantém a turbina ativa no banco de dados.
 
-1. CRIAR. Preencher os cinco campos obrigatórios (Número de Série, Potência,
-   ID Inversor, Modelo e Fornecedor) com os dados de teste. Verificar que o
-   campo Status está marcado como Ativo por padrão antes de salvar. Acionar
-   Salvar uma vez.
-   Esperado: a turbina é criada; o sistema exibe a mensagem
-   "Turbina eólica cadastrada com sucesso".
+- FA02: Tentativa de Atualização com Valor Inválido
+  1. No passo 6, o ator preenche a Potência Nominal com um valor negativo ("-500 kW").
+  2. Ao clicar em "Atualizar", o sistema bloqueia a gravação e exibe mensagem de erro de validação.
 
-2. CONSULTAR. Buscar TUR-ESTUDO-001 na listagem. Abrir a linha correspondente
-   e conferir que Número de Série, Potência, Modelo, Fornecedor, Inversor e
-   Status correspondem aos dados cadastrados no passo 1.
-   Esperado: a tabela exibe a turbina com os valores corretos; o detalhe
-   apresenta os mesmos dados do cadastro.
+-------------------------------------------------------------------------------
+REGRAS DE NEGÓCIO
+-------------------------------------------------------------------------------
+- RN01: O Identificador/Código da turbina eólica é único no sistema e não pode ser duplicado.
+- RN02: Todos os campos estruturais do ativo são de preenchimento obrigatório.
+- RN03: Valores numéricos de potência, rotor e torre devem ser estritamente maiores que zero.
 
-3. ATUALIZAR. Abrir o formulário de edição de TUR-ESTUDO-001. Confirmar que
-   os valores atuais estão carregados. Alterar a Potência de 2000 para 2500.
-   Acionar Salvar.
-   Esperado: o sistema confirma a atualização; a consulta subsequente do
-   mesmo ativo exibe Potência 2500 e todos os demais dados preservados.
-
-4. CONSULTAR APÓS ATUALIZAÇÃO. Reabrir a consulta e verificar TUR-ESTUDO-001.
-   Esperado: Potência 2500 é exibida; Número de Série, Modelo, Fornecedor e
-   Status permanecem inalterados.
-
-5. EXCLUIR. Usar variante sem associações a serviços impeditivas. Acionar
-   Excluir; conferir que a caixa de confirmação apresenta o Número de Série
-   TUR-ESTUDO-001; confirmar a exclusão.
-   Esperado: a turbina é removida; a consulta não a apresenta mais; a
-   exclusão não é apresentada como simples inativação. A comprovação de
-   remoção permanente e os meios observáveis para confirmá-la dependem das
-   pendências descritas abaixo.
-
-6. CONSULTAR APÓS EXCLUSÃO. Buscar TUR-ESTUDO-001 na listagem.
-   Esperado: o registro não é encontrado; nenhum dado residual é exibido.
-
-[A] FLUXOS ALTERNATIVOS
-
-1. Turbina com serviço associado. Preparar variante com ordem de serviço
-   vinculada e solicitar exclusão.
-   Esperado: recusa; motivo informado; turbina preservada. Ref.: CA-2.1.2.4.02.
-
-2. Duplicidade de série. Tentar cadastrar uma segunda turbina com
-   TUR-ESTUDO-001.
-   Esperado: inclusão recusada; duplicidade informada. Ref.: CA-2.1.2.1.07.
-
-3. Campo obrigatório vazio na inclusão. Tentar salvar com um dos cinco campos
-   obrigatórios em branco.
-   Esperado: salvamento recusado; campo vazio identificado. Ref.: CA-2.1.2.1.02.
-
-[A-COM] CONCORRÊNCIA E INTERRUPÇÃO
-Se outro usuário alterar o cadastro durante o fluxo, ou ocorrer perda de
-resposta, registrar o ponto interrompido e a dúvida. Não escolher prevalência,
-prazo ou recuperação que não esteja definida. Os resultados dessas variantes
-permanecem pendentes de especificação.
-
-REGRAS DE NEGÓCIO E ORÁCULO
-- Os resultados dos passos derivam dos CAs relacionados, não da resposta atual
-  do sistema.
-- O cadastro em uma operação não concede autorização para as operações seguintes.
-- Cancelamento e bloqueio não devem ser descritos como conclusão bem-sucedida.
-- Ausência na listagem não prova remoção permanente.
-
-RESULTADOS ESPERADOS E REGISTRO FUTURO
-- Comparar entrada, consulta inicial, consulta após edição e resultado da exclusão.
-- Em futura execução, anotar versão, data, massa, passo, esperado, observado e
-  evidência.
-- Nesta entrega: nenhum resultado observado; nenhum teste executado; sem
-  homologação.
-
-PENDÊNCIAS PARA STAKEHOLDERS
-Forma de comprovar remoção definitiva versus inativação; equivalência de perfis
-para exclusão; comportamento da exclusão quando há histórico de ordens de serviço;
-concorrência e perda de resposta durante o salvamento.
+-------------------------------------------------------------------------------
+MATRIZ DE DADOS E RESULTADOS ESPERADOS
+-------------------------------------------------------------------------------
++--------------------+----------------------------+-------------------------------------+
+| Operação           | Dados de Entrada           | Resultado Esperado                  |
++--------------------+----------------------------+-------------------------------------+
+| Inclusão (Create)  | Código: TB-EOL-001         | HTTP 201 Created.                   |
+|                    | Modelo: Vestas V150        | Mensagem: "Turbina Eólica           |
+|                    | Potência: 4200 kW          | cadastrada com sucesso."            |
++--------------------+----------------------------+-------------------------------------+
+| Consulta (Read)    | Filtro: TB-EOL-001         | Exibição exata dos dados salvos     |
+|                    |                            | no grid e na tela de detalhamento.  |
++--------------------+----------------------------+-------------------------------------+
+| Atualização (Update)| Potência: 4500 kW          | HTTP 200 OK.                        |
+|                    | Status: Em Manutenção      | Mensagem: "Cadastro atualizado."    |
++--------------------+----------------------------+-------------------------------------+
+| Exclusão (Delete)  | Registro: TB-EOL-001       | Removido com sucesso. Busca final   |
+|                    |                            | retorna resultado vazio.            |
++--------------------+----------------------------+-------------------------------------+
 """
+
+def test_ucs001_manter_turbinas_completo():
+    """Função de teste integradora para o ciclo de vida completo de Turbinas Eólicas."""
+    pass

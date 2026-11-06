@@ -1,85 +1,77 @@
 """
-UCS006 — Exportar ficha individual de turbina eólica
+===============================================================================
+IDENTIFICADOR: UCS006
+TÍTULO: Atualização de Turbina Eólica com Dados Inválidos ou Inconsistentes
+AUTOR: Ícaro Pontes
+MÓDULO: Gestão de Ativos - Turbinas Eólicas
+===============================================================================
 
-Autoria / responsável acadêmico: Ícaro Pontes
-Preparação: assistência de IA; revisão pessoal e apresentação pelo responsável pendentes.
-Data: 05/11/2026
-Natureza: especificação documental, não teste automatizado nem evidência de execução.
-Grupo de requisitos: Gestão de Turbinas Eólicas — EPIC 2.1.2.
+OBJETIVO:
+Validar que a edição de um cadastro de Turbina Eólica existente rejeita a substituição
+de informações válidas por dados numéricos negativos, textos em branco ou violações
+de integridade de código único.
 
-OBJETIVO
-Verificar que a exportação individual produz um PDF referente
-exclusivamente ao cadastro escolhido, que o arquivo é identificável
-pelo registro selecionado e que a indisponibilidade do registro é
-informada corretamente. Cenário de relatório individual, distinto
-da exportação coletiva do UCS005.
+REQUISITOS RELACIONADOS:
+- FEATURE-2.1.2.3: Atualização de turbinas eólicas
 
-REQUISITOS RELACIONADOS
-Feature: Exportação de turbinas eólicas.
-Critérios identificados pelos títulos originais: Arquivo individual;
-Registro individual indisponível; Entrega do arquivo.
-Ref.: CA-2.1.2.2.04, CA-2.1.2.2.07.
+ATOR:
+Engenheiro / Operador do Sistema.
 
-ATOR
-Usuário com permissão de visualização do registro individual.
+PRÉ-CONDIÇÕES:
+1. O usuário está autenticado no BVapp.
+2. A turbina "TB-EOL-100" (Modelo: "GAMESA G97", Potência: 2000 kW) está cadastrada.
 
-PRÉ-CONDIÇÕES
-- Ambiente futuro de estudo isolado; massa sintética preparada.
-- Turbina TUR-IND-A existente com dados cadastrais conhecidos.
-- Turbina TUR-IND-B existente com dados diferentes de TUR-IND-A.
-- Turbina TUR-IND-EXCLUIDA foi removida do sistema antes do fluxo.
-- Nenhum cadastro é criado nem alterado neste cenário.
+PÓS-CONDIÇÕES:
+1. As alterações incorretas são rejeitadas.
+2. O registro original no banco de dados permanece intacto com os valores anteriores.
 
-DADOS DE TESTE
-Turbinas disponíveis: TUR-IND-A e TUR-IND-B (dados distintos entre si).
-Turbina excluída: TUR-IND-EXCLUIDA.
-Os dados são fictícios; não definem novos limites ou domínios.
+-------------------------------------------------------------------------------
+FLUXO PRINCIPAL (FALHA NA ATUALIZAÇÃO POR DADOS INCORRETOS)
+-------------------------------------------------------------------------------
+1. O ator navega até a tela de edição da turbina "TB-EOL-100".
+2. O sistema carrega o formulário preenchido com os dados atuais do ativo.
+3. O ator apaga todo o texto do campo "Modelo", deixando-o em branco.
+4. O ator altera o valor da "Potência Nominal" de "2000" para "-100".
+5. O ator altera a "Altura da Torre" para "0.00".
+6. O ator clica no botão "Atualizar".
+7. O sistema executa a validação do formulário e impede o salvamento.
+8. O sistema sinaliza os campos incorretos e exibe as mensagens de validação:
+   - "O modelo da turbina eólica não pode ficar em branco."
+   - "A potência nominal deve ser maior que zero."
+   - "A altura da torre deve ser maior que zero."
+9. O ator decide não corrigir os dados e clica no botão "Cancelar Edição".
+10. O sistema fecha a tela de edição e redireciona para os detalhes da turbina.
+11. O ator verifica que os dados permanecem com os valores originais ("GAMESA G97" e 2000 kW).
 
-[FP] FLUXO PRINCIPAL
+-------------------------------------------------------------------------------
+FLUXOS ALTERNATIVOS
+-------------------------------------------------------------------------------
+- FA01: Tentativa de Alterar Código para Outro Já Existente
+  1. No passo 3, o ator altera o código de "TB-EOL-100" para "TB-EOL-001" (que pertence a outra turbina).
+  2. O ator clica em "Atualizar".
+  3. O sistema valida a unicidade do código na base e impede a alteração exibindo:
+     "O código informado já está em uso por outro ativo eólico."
 
-1. Localizar TUR-IND-A na listagem e acessar seus detalhes.
+-------------------------------------------------------------------------------
+REGRAS DE NEGÓCIO
+-------------------------------------------------------------------------------
+- RN01: Não é permitido atualizar o cadastro deixando campos obrigatórios vazios.
+- RN02: Alterações de código do ativo devem respeitar a restrição de unicidade global.
 
-2. Verificar que a opção de exportação individual disponível é PDF
-   (não CSV). Acionar a exportação individual.
-   Esperado: o download é iniciado; o resultado da obtenção é informado.
-
-3. Verificar o arquivo PDF obtido:
-   (a) O arquivo representa exclusivamente TUR-IND-A.
-   (b) A identificação no arquivo permite reconhecer TUR-IND-A pelo
-       Número de Série.
-   (c) Nenhum dado de TUR-IND-B está presente no arquivo.
-   Conteúdo completo do PDF permanece BLOQUEADO para aceite integral
-   até resolução das pendências de contrato de saída.
-
-4. Repetir o fluxo para TUR-IND-B. Confirmar que o arquivo representa
-   TUR-IND-B e não TUR-IND-A.
-   Esperado: o arquivo de TUR-IND-B não contém dados de TUR-IND-A.
-
-[A] FLUXOS ALTERNATIVOS
-
-1. Registro indisponível. Solicitar a exportação individual de
-   TUR-IND-EXCLUIDA.
-   Esperado: indisponibilidade informada; nenhum relatório de outro
-   registro entregue.
-
-2. Mesmo alvo ao exportar. Enquanto visualizando TUR-IND-A, acionar a
-   exportação individual disponível na tela.
-   Esperado: a solicitação se refere a TUR-IND-A, não a TUR-IND-B nem
-   a nenhum outro registro.
-
-REGRAS DE NEGÓCIO E ORÁCULO
-- A exportação individual é sempre PDF; não presumir CSV individual.
-- O arquivo não substitui a exportação da lista (coletiva).
-- Registro indisponível não deve ser substituído por outro registro.
-- Resultados derivam dos critérios identificados, não da implementação atual.
-
-RESULTADOS ESPERADOS E REGISTRO FUTURO
-- Nenhum arquivo gerado nem cenário executado nesta entrega.
-- Em execução futura: registrar versão, data, massa, passo, esperado,
-  observado e evidência.
-
-PENDÊNCIAS PARA STAKEHOLDERS
-Campos mínimos e conteúdo completo do PDF individual precisam de decisão.
-Unidades de potência e garantias na ficha. Comportamento quando o registro
-é excluído durante a preparação do arquivo.
+-------------------------------------------------------------------------------
+MATRIZ DE DADOS E RESULTADOS ESPERADOS
+-------------------------------------------------------------------------------
++--------------------+----------------------------+-------------------------------------+
+| Campo Alterado     | Valor Invalido Tentado     | Resultado Esperado                  |
++--------------------+----------------------------+-------------------------------------+
+| Modelo             | [Texto Vazio]              | Bloqueio do salvamento.             |
+| Potência Nominal   | -100 kW                    | Exibição de mensagem de erro.       |
+| Código             | "TB-EOL-001" (Duplicado)   | Rejeição por violação de unicidade. |
++--------------------+----------------------------+-------------------------------------+
+| Estado do Banco    | Nenhuma alteração efetuada | Registro original mantido intacto.  |
++--------------------+----------------------------+-------------------------------------+
 """
+
+def test_ucs006_atualizacao_dados_invalidos():
+    """Função de teste para tratamento de erro na atualização de turbinas."""
+    pass

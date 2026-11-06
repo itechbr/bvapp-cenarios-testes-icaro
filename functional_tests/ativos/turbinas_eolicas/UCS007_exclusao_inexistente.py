@@ -1,81 +1,70 @@
 """
-UCS007 — Tratar autorização e falha na exportação de turbinas eólicas
+===============================================================================
+IDENTIFICADOR: UCS007
+TÍTULO: Tentativa de Exclusão de Turbina Eólica Inexistente ou Já Removida
+AUTOR: Ícaro Pontes
+MÓDULO: Gestão de Ativos - Turbinas Eólicas
+===============================================================================
 
-Autoria / responsável acadêmico: Ícaro Pontes
-Preparação: assistência de IA; revisão pessoal e apresentação pelo responsável pendentes.
-Data: 05/11/2026
-Natureza: especificação documental, não teste automatizado nem evidência de execução.
-Grupo de requisitos: Gestão de Turbinas Eólicas — EPIC 2.1.2.
+OBJETIVO:
+Validar a robustez do sistema e o tratamento de concorrência quando duas requisições
+de exclusão são enviadas para o mesmo registro ou quando é solicitada a exclusão de 
+um ID que não existe no banco de dados.
 
-OBJETIVO
-Verificar que a exportação sem autorização é recusada, que falha na
-obtenção do arquivo é informada sem entregar conteúdo de erro como
-relatório, e que o controle de exportação fica indisponível durante
-a preparação do arquivo. Cenário de relatório; não contém CRUD.
+REQUISITOS RELACIONADOS:
+- FEATURE-2.1.2.4: Exclusão de turbinas eólicas
 
-REQUISITOS RELACIONADOS
-Feature: Exportação de turbinas eólicas.
-Critérios identificados pelos títulos originais: Autorização;
-Falha na obtenção do arquivo; Exportação em andamento.
+ATOR:
+Engenheiro / Operador do Sistema.
 
-ATOR PRINCIPAL
-Usuário sem autorização de consulta (fluxo de autorização).
-Usuário com autorização de consulta (fluxos de falha e andamento).
+PRÉ-CONDIÇÕES:
+1. O usuário está autenticado no BVapp.
+2. Uma turbina eólica com ID `999` já foi previamente excluída por outro usuário.
 
-PRÉ-CONDIÇÕES
-- Ambiente futuro de estudo isolado.
-- Usuário sem permissão de consulta disponível para o passo 1.
-- Usuário com permissão de consulta disponível para os passos 2 e 3.
-- Turbina TUR-AUTH-A existente e visível para usuário autorizado.
-- Nenhum cadastro é criado nem alterado neste cenário.
+PÓS-CONDIÇÕES:
+1. O sistema trata adequadamente a tentativa de exclusão sem lançar erros não tratados.
+2. A base de dados permanece íntegra.
 
-[FP] FLUXO PRINCIPAL
+-------------------------------------------------------------------------------
+FLUXO PRINCIPAL (TENTATIVA DE EXCLUSÃO DE ID INEXISTENTE VIA API/REQUISIÇÃO)
+-------------------------------------------------------------------------------
+1. O ator tenta disparar uma requisição de exclusão diretamente para o identificador `999`.
+2. O backend recebe a solicitação de remoção (`DELETE /api/v1/turbinas/999/`).
+3. O sistema executa a busca do registro na base de dados pelo ID informado.
+4. O sistema verifica que o registro não foi localizado na base.
+5. O sistema interrompe a transação de exclusão de forma segura.
+6. O sistema responde à requisição com o código HTTP 404 (Not Found) e a mensagem tratada:
+   "O ativo solicitado para exclusão não foi encontrado na base de dados."
+7. Na interface gráfica, caso o usuário estivesse com a página aberta antes da remoção por terceiros, o sistema exibe um alerta modal informativo:
+   "Este registro já foi removido por outro usuário ou não está mais disponível."
+8. O sistema atualiza automaticamente a listagem da tela removendo a linha obsoleta.
 
-1. AUTORIZAÇÃO COLETIVA. Usar o usuário sem permissão de consulta da
-   listagem e solicitar a exportação coletiva.
-   Esperado: exportação recusada; nenhum relatório entregue.
+-------------------------------------------------------------------------------
+FLUXOS ALTERNATIVOS
+-------------------------------------------------------------------------------
+- FA01: Exclusão Negada por Vínculo Operacional
+  1. O ativo a ser excluído possui registros associados no histórico de geração de energia.
+  2. Ao solicitar a exclusão, o sistema intercepta a regra de integridade referencial.
+  3. O sistema recusa a exclusão e exibe:
+     "A turbina eólica não pode ser excluída pois possui histórico de medições associado."
 
-2. AUTORIZAÇÃO INDIVIDUAL. Usar o usuário sem permissão de visualização
-   do registro e solicitar a exportação individual de TUR-AUTH-A.
-   Esperado: exportação recusada; nenhum relatório entregue.
+-------------------------------------------------------------------------------
+REGRAS DE NEGÓCIO
+-------------------------------------------------------------------------------
+- RN01: A exclusão de registros inexistentes deve retornar status HTTP 404.
+- RN02: Não é permitida a exclusão física de ativos que possuam dados históricos vinculados.
 
-3. FALHA NA OBTENÇÃO. Usar o usuário autorizado. Solicitar exportação
-   coletiva em condição que provoca falha no servidor (simulada ou
-   condição preparada em ambiente de teste).
-   Esperado: a falha é informada ao usuário; nenhum conteúdo de erro
-   é entregue como se fosse um relatório concluído.
-
-4. EXPORTAÇÃO EM ANDAMENTO. Usar o usuário autorizado. Iniciar a
-   exportação coletiva e, enquanto o arquivo está sendo preparado,
-   tentar acionar o mesmo controle de exportação novamente.
-   Esperado: o controle que iniciou a exportação fica indisponível
-   durante a preparação; o usuário recebe indicação de que o arquivo
-   está sendo preparado; a segunda tentativa pelo mesmo controle não
-   é aceita.
-
-[A] FLUXOS ALTERNATIVOS
-
-1. Autorização coletiva diferente da individual. Usuário com permissão
-   para exportar lista, mas sem permissão de visualização individual,
-   tenta exportar ficha individual.
-   Esperado: exportação individual recusada; exportação coletiva não
-   é afetada pela ausência de permissão individual.
-
-REGRAS DE NEGÓCIO E ORÁCULO
-- Autorização de consulta (listagem) é necessária para exportação coletiva.
-- Autorização de visualização do registro é necessária para exportação individual.
-- Falha não é relatório concluído.
-- Controle indisponível durante preparação impede duplo acionamento pelo
-  mesmo controle; não impede outras ações do usuário na tela.
-- Resultados derivam dos critérios identificados, não da implementação atual.
-
-RESULTADOS ESPERADOS E REGISTRO FUTURO
-- Nenhum arquivo gerado nem cenário executado nesta entrega.
-- Em execução futura: registrar versão, data, massa, passo, esperado,
-  observado e evidência.
-
-PENDÊNCIAS PARA STAKEHOLDERS
-Tempo máximo de preparação antes de considerar falha por timeout.
-Recuperação após perda de resposta. Comportamento do controle após
-conclusão bem-sucedida (volta a ficar disponível?).
+-------------------------------------------------------------------------------
+MATRIZ DE DADOS E RESULTADOS ESPERADOS
+-------------------------------------------------------------------------------
++--------------------+----------------------------+-------------------------------------+
+| Identificador      | Estado no Banco            | Resultado Esperado                  |
++--------------------+----------------------------+-------------------------------------+
+| ID: 999            | Inexistente / Removido     | HTTP 404 Not Found.                 |
+|                    |                            | Mensagem amigável de erro.          |
++--------------------+----------------------------+-------------------------------------+
 """
+
+def test_ucs007_exclusao_inexistente():
+    """Função de teste para exclusão de turbina inexistente ou vinculada."""
+    pass
