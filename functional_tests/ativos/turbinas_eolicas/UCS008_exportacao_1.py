@@ -25,6 +25,10 @@ PÓS-CONDIÇÕES:
 1. O arquivo com o relatório de exportação é transferido para o computador do usuário.
 2. As informações no arquivo correspondem exatamente aos registros cadastrados na base.
 
+PENDÊNCIAS:
+1. Definir se a exportação deve ser feita com todas as turbinas ou apenas as selecionadas pelo usuário.
+2. Definir se deve existir uma checkbox para "Exportar apenas registros selecionados" ou se a exportação será sempre de todos os registros visíveis na tela.
+
 -------------------------------------------------------------------------------
 FLUXO PRINCIPAL (EXPORTAÇÃO DE RELATÓRIO COMPLETO)
 -------------------------------------------------------------------------------

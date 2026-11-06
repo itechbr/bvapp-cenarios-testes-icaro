@@ -36,7 +36,7 @@ FLUXO PRINCIPAL (TENTATIVA DE EXCLUSÃO DE ID INEXISTENTE VIA API/REQUISIÇÃO)
 6. O sistema responde à requisição com o código HTTP 404 (Not Found) e a mensagem tratada:
    "O ativo solicitado para exclusão não foi encontrado na base de dados."
 7. Na interface gráfica, caso o usuário estivesse com a página aberta antes da remoção por terceiros, o sistema exibe um alerta modal informativo:
-   "Este registro já foi removido por outro usuário ou não está mais disponível."
+   "Este registro já foi removido por outro usuário ou não está mais disponível.(este passo precisa ser discutido com o time de UX/UI)"
 8. O sistema atualiza automaticamente a listagem da tela removendo a linha obsoleta.
 
 -------------------------------------------------------------------------------

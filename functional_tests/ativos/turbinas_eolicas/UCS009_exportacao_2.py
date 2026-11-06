@@ -25,6 +25,10 @@ PRÉ-CONDIÇÕES:
 PÓS-CONDIÇÕES:
 1. O arquivo gerado contém **apenas** as turbinas pertencentes ao parque filtrado.
 
+PENDÊNCIAS:
+1. Definir se a exportação deve ser feita com todas as turbinas ou apenas as selecionadas pelo usuário.
+2. Definir se deve existir uma checkbox para "Exportar apenas registros selecionados" ou se a exportação será sempre de todos os registros visíveis na tela.
+
 -------------------------------------------------------------------------------
 FLUXO PRINCIPAL (EXPORTAÇÃO COM FILTRO ATIVO)
 -------------------------------------------------------------------------------
