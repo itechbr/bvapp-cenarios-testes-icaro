@@ -40,7 +40,7 @@ FLUXO PRINCIPAL (CRUD VARIADO DE ALTA CAPACIDADE)
 4. O ator preenche o formulário com dados de alta capacidade técnica:
    - Identificador/Código: "TB-OFFSHORE-999"
    - Modelo: "Siemens Gamesa SG 14-222 DD"
-   - Potência Nominal: 14000 kW (14 MW)
+   - Potência Nominal: 14000000 W (14 MW)
    - Diâmetro do Rotor: 222.50 m
    - Altura da Torre: 165.80 m
    - Parque Eólico: "Parque Eólico Offshore Alpha"
@@ -54,13 +54,13 @@ FLUXO PRINCIPAL (CRUD VARIADO DE ALTA CAPACIDADE)
 8. O sistema retorna a linha correspondente no grid.
 9. O ator aciona "Visualizar Detalhes".
 10. O sistema exibe a página de detalhamento. O ator confirma que os valores 
-    decimais (222.50 m e 165.80 m) e inteiros (14000 kW) mantiveram a precisão exata.
+    decimais (222.50 m e 165.80 m) e inteiros (14000000 W) mantiveram a precisão exata.
 
 --- ETAPA 3: ATUALIZAÇÃO PARA MODELO DIVERSO (UPDATE) ---
 11. O ator clica no botão "Editar".
 12. O sistema abre o formulário preenchido.
 13. O ator altera o modelo para "Siemens Gamesa SG 15-236 DD", a potência nominal 
-    para 15000 kW e o diâmetro do rotor para 236.00 m.
+    para 15000 W e o diâmetro do rotor para 236.00 m.
 14. O ator altera o campo "Status" para "Operacional".
 15. O ator clica no botão "Atualizar".
 16. O sistema valida os dados alterados, grava no banco e exibe a mensagem:
@@ -80,7 +80,7 @@ FLUXOS ALTERNATIVOS
 - FA01: Exceder Limite Numérico Permitido no Campo Potência
   1. No passo 4, o ator digita "9999999999" no campo de potência nominal.
   2. Ao clicar em "Salvar", o sistema valida o limite da coluna e exibe a mensagem:
-     "O valor informado para Potência Nominal excede o limite máximo permitido (999.999 kW)."
+     "O valor informado para Potência Nominal excede o limite máximo permitido (999.999999 W)."
   3. O sistema impede a gravação até que o dado seja corrigido.
 
 -------------------------------------------------------------------------------

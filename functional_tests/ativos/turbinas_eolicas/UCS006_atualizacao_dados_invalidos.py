@@ -19,7 +19,7 @@ Engenheiro / Operador do Sistema.
 
 PRÉ-CONDIÇÕES:
 1. O usuário está autenticado no BVapp.
-2. A turbina "TB-EOL-100" (Modelo: "GAMESA G97", Potência: 2000 kW) está cadastrada.
+2. A turbina "TB-EOL-100" (Modelo: "GAMESA G97", Potência: 2000000 W) está cadastrada.
 
 PÓS-CONDIÇÕES:
 1. As alterações incorretas são rejeitadas.
@@ -65,7 +65,7 @@ MATRIZ DE DADOS E RESULTADOS ESPERADOS
 | Campo Alterado     | Valor Invalido Tentado     | Resultado Esperado                  |
 +--------------------+----------------------------+-------------------------------------+
 | Modelo             | [Texto Vazio]              | Bloqueio do salvamento.             |
-| Potência Nominal   | -100 kW                    | Exibição de mensagem de erro.       |
+| Potência Nominal   | -100000000 W               | Exibição de mensagem de erro.       |
 | Código             | "TB-EOL-001" (Duplicado)   | Rejeição por violação de unicidade. |
 +--------------------+----------------------------+-------------------------------------+
 | Estado do Banco    | Nenhuma alteração efetuada | Registro original mantido intacto.  |

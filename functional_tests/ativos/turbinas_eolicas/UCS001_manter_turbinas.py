@@ -35,15 +35,16 @@ FLUXO PRINCIPAL (CRUD COMPLETO)
 2. O ator preenche o formulário com os dados do novo ativo:
    - Identificador/Código: "TB-EOL-001"
    - Modelo: "Vestas V150-4.2 MW"
-   - Potência Nominal: 4200 kW
+   - Potência Nominal: 4200000 W
    - Diâmetro do Rotor: 150.0 m
    - Altura da Torre: 120.0 m
    - Parque Eólico: "Parque Eólico Serra do Mel"
    - Status: "Operacional"
+   - Operadora de Energia: "Neoenergia"
 3. O ator clica em "Salvar" e o sistema confirma o cadastro com sucesso.
 4. O ator aplica o filtro na listagem buscando pelo código "TB-EOL-001".
 5. O sistema retorna o registro cadastrado; o ator aciona "Visualizar Detalhes" e valida a fidelidade dos dados.
-6. O ator clica em "Editar", altera a Potência Nominal para "4500 kW" e o Status para "Em Manutenção".
+6. O ator clica em "Editar", altera a Potência Nominal para "4500000 W" e o Status para "Em Manutenção".
 7. O ator clica em "Atualizar" e o sistema confirma a alteração no banco de dados.
 8. O ator aciona a opção "Excluir Turbina Eólica" no registro "TB-EOL-001".
 9. O sistema exibe a modal de confirmação de exclusão e o ator clica em "Confirmar Exclusão".
@@ -57,7 +58,7 @@ FLUXOS ALTERNATIVOS
   2. O sistema fecha a janela modal sem aplicar a remoção e mantém a turbina ativa no banco de dados.
 
 - FA02: Tentativa de Atualização com Valor Inválido
-  1. No passo 6, o ator preenche a Potência Nominal com um valor negativo ("-500 kW").
+  1. No passo 6, o ator preenche a Potência Nominal com um valor negativo ("-500 W").
   2. Ao clicar em "Atualizar", o sistema bloqueia a gravação e exibe mensagem de erro de validação.
 
 -------------------------------------------------------------------------------

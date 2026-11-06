@@ -71,7 +71,7 @@ MATRIZ DE DADOS E RESULTADOS ESPERADOS
 | Campo                  | Valor Inserido Incorreto         | Mensagem / Resultado Esperado      |
 +------------------------+----------------------------------+------------------------------------+
 | Identificador          | [Em branco]                      | "Campo obrigatório."               |
-| Potência Nominal       | -2500 kW                         | "Deve ser um número positivo."     |
+| Potência Nominal       | -2500000 W                       | "Deve ser um número positivo."     |
 | Diâmetro do Rotor      | 0.00 m                           | "Deve ser maior que zero."         |
 | Altura da Torre        | "cem metros"                     | "Formato numérico inválido."       |
 | Parque Eólico          | [Não selecionado]                | "Seleção obrigatória."             |
