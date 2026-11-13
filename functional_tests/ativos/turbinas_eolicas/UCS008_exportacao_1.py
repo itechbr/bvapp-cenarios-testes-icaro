@@ -15,7 +15,7 @@ REQUISITOS RELACIONADOS:
 - FEATURE: Exportação de turbinas eólicas
 
 ATOR:
-Engenheiro / Analista de Operações.
+Administrador do Sistema.
 
 PRÉ-CONDIÇÕES:
 1. O usuário está autenticado no BVapp.

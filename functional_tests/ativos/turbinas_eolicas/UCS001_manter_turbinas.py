@@ -18,7 +18,7 @@ REQUISITOS RELACIONADOS:
 - FEATURE-2.1.2.4: Exclusão de turbinas eólicas
 
 ATOR:
-Administrador
+Administrador do Sistema.
 
 PRÉ-CONDIÇÕES:
 1. O usuário está autenticado no BVapp com perfil de acesso permissivo.

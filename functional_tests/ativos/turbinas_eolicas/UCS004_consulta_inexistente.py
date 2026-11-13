@@ -15,7 +15,7 @@ REQUISITOS RELACIONADOS:
 - FEATURE-2.1.2.2: Consulta de turbinas eólicas
 
 ATOR:
-Engenheiro / Operador do Sistema.
+Administrador do Sistema.
 
 PRÉ-CONDIÇÕES:
 1. O usuário está autenticado no BVapp.

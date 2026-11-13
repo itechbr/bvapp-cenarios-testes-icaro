@@ -19,7 +19,7 @@ REQUISITOS RELACIONADOS:
 - FEATURE-2.1.2.4: Exclusão de turbinas eólicas
 
 ATOR:
-Engenheiro de Operações / Especialista em Ativos Offshore.
+Administrador do Sistema.
 
 PRÉ-CONDIÇÕES:
 1. O usuário está autenticado no BVapp com perfil Administrador.
