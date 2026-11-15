@@ -1,19 +1,9 @@
-# 🔍 Matriz de Rastreabilidade de Testes
+# Matriz de Rastreabilidade
 
-**Autor:** Ícaro Pontes  
-**Módulo:** Gestão de Ativos - Turbinas Eólicas  
+Mapeamento da cobertura dos requisitos da Epic 2.1.2 (Gestão de Turbinas Eólicas) pelos cenários de teste especificados.
 
-Esta matriz mapeia a relação entre os cenários de teste funcionais e os requisitos especificados na Epic 2.1.2.
-
-| Cenário | Título do Cenário | Requisito Relacionado | Tipo de Teste |
-| :--- | :--- | :--- | :--- |
-| **UCS001** | Manter Turbinas Eólicas (CRUD Completo) | FEATURE-2.1.2.1 / 2.1.2.2 / 2.1.2.3 / 2.1.2.4 | Fluxo Principal / Integracional |
-| **UCS002** | Variação de CRUD - Limites Operacionais | FEATURE-2.1.2.1 / 2.1.2.2 / 2.1.2.3 / 2.1.2.4 | Fluxo de Exceção / Limites Numéricos |
-| **UCS003** | Inclusão com Dados Inválidos | FEATURE-2.1.2.1 | Fluxo Alternativo / Validação UI/API |
-| **UCS004** | Consulta de Turbina Inexistente | FEATURE-2.1.2.2 | Fluxo Alternativo / Tratamento HTTP 404 |
-| **UCS005** | Consulta com Lista de Turbinas Vazia | FEATURE-2.1.2.2 | Estado Inicial / Interface Neutra |
-| **UCS006** | Atualização com Dados Inválidos | FEATURE-2.1.2.3 | Fluxo Alternativo / Validação de Edição |
-| **UCS007** | Exclusão de Turbina Inexistente | FEATURE-2.1.2.4 | Fluxo de Erro / Integridade Referencial |
-| **UCS008** | Exportação de Relatório (Fluxo Padrão) | FEATURE Exportação | Fluxo Principal / Relatórios CSV/PDF |
-| **UCS009** | Exportação com Filtro Ativo | FEATURE Exportação / FEATURE-2.1.2.2 | Fluxo Combinado / Extração Filtrada |
-| **UCS010** | Exportação com Lista Vazia | FEATURE Exportação | Regra de Negócio / Bloqueio de Extração |
+| Cenário | Arquivo | Requisitos Relacionados | Natureza | Cobertura Funcional Detalhada |
+| :--- | :--- | :--- | :--- | :--- |
+| **UCS001** | [UCS001_manter_turbinas_eolicas.py](../functional_tests/ativos/turbinas_eolicas/UCS001_manter_turbinas_eolicas.py) | FEATURE-2.1.2.1, FEATURE-2.1.2.2, FEATURE-2.1.2.3, FEATURE-2.1.2.4 | CRUD Completo | **FP (Passos 1 a 5):** Inclusão com campos válidos.<br>**[A1]:** Consulta de ativo.<br>**[A2]:** Atualização de atributos técnicos.<br>**[A3]:** Exclusão sem impedimentos.<br>**[A4]:** Campos obrigatórios em branco.<br>**[A5]:** Número de série duplicado.<br>**[A6]:** Potência menor ou igual a zero.<br>**[A7]:** Inconsistência na cronologia de datas.<br>**[A8]:** Par de garantia incompleto ou negativo.<br>**[A9]:** Inversor inativo ou usina divergente.<br>**[A10]:** Alteração de status com confirmação.<br>**[A11]:** Cancelamento da alteração de status.<br>**[A12]:** Cancelamento da exclusão.<br>**[A13]:** Bloqueio de exclusão por histórico de manutenção/serviços.<br>**[A14]:** Tentativa de operação por usuário não autorizado. |
+| **UCS002** | [UCS002_exportar_consulta_turbinas_eolicas.py](../functional_tests/ativos/turbinas_eolicas/UCS002_exportar_consulta_turbinas_eolicas.py) | FEATURE Exportação, FEATURE-2.1.2.2 | Funcionalidade Não-CRUD | **FP (Passos 1 a 5):** Exportação coletiva em CSV abrangendo todos os registros além da página.<br>**[A1]:** Exportação coletiva em PDF consolidado com cabeçalho institucional.<br>**[A2]:** Exportação com múltiplos filtros combinados (AND).<br>**[A3]:** Tentativa de exportação com consulta vazia.<br>**[A4]:** Tentativa de extração sem permissão de acesso (HTTP 403).<br>**[A5]:** Bloqueio do botão contra duplo clique e falha de rede/timeout. |
+| **UCS003** | [UCS003_exportar_ficha_individual_turbina.py](../functional_tests/ativos/turbinas_eolicas/UCS003_exportar_ficha_individual_turbina.py) | FEATURE Exportação, FEATURE-2.1.2.2 | Funcionalidade Não-CRUD | **FP (Passos 1 a 5):** Exportação de ficha técnica individual em PDF a partir da tela de detalhes do ativo selecionado.<br>**[A1]:** Inclusão de seções complementares de histórico operacional.<br>**[A2]:** Tentativa de exportação de ficha de identificador inexistente/excluído.<br>**[A3]:** Tentativa de extração individual por usuário não autorizado. |

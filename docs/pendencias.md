@@ -1,21 +1,21 @@
-# ❓ Registro de Dúvidas e Inconsistências (Stakeholders)
+# Pendências de Especificação de Requisitos (Stakeholders)
 
-**Autor:** Ícaro Pontes  
-**Módulo:** Gestão de Ativos - Turbinas Eólicas  
+Durante a especificação dos cenários de teste da Epic 2.1.2 (Gestão de Turbinas Eólicas), foram identificadas as seguintes lacunas e ambiguidades nos requisitos funcionais de origem. Conforme as boas práticas de engenharia de software, nenhum comportamento foi inventado; as etapas que dependem dessas definições permanecem registradas como dúvidas formais para os *stakeholders*:
 
-Conforme orientação da atividade e análise do documento de *Walkthrough* de revisão, foram identificadas severas ambiguidades e lacunas nos requisitos originais da Epic 2.1.2. Os cenários de teste foram especificados, mas a execução da automação e a aprovação dos critérios de aceite dependem da resolução formal dos seguintes pontos com os *stakeholders*:
+## 1. Unidades de Medida e Cronologia de Datas (UCS001, UCS002)
+- **Potência:** O CA de Inclusão exige a Potência Nominal como número inteiro em Watts (W), enquanto a regra de exportação cita kW e MW sem estabelecer uma taxa oficial de conversão e arredondamento decimal.
+- **Formato Temporal:** A especificação menciona "Data de Entrada em Operação (anos)", aplicando uma métrica de duração a um campo de data cadastral (`DD/MM/AAAA`).
+- **Garantia em Meses:** Informar data de compra/instalação torna obrigatório o preenchimento de garantia em meses, mas não delimita o cálculo exato para conversão em dias em anos bissextos.
 
-1. **Dúvida 01 — Ambiguidade de Unidades (Potência e Datas):**
-   * *Inconsistência:* O CA de Inclusão descreve a potência nominal como valor numérico inteiro em Watts (W), mas a Feature de Exportação exige W/kW sem definir a regra de conversão. Além disso, as regras pedem "Data de Entrada em Operação (anos)", o que aplica equivocadamente uma métrica de duração a um campo de data. A tabela usa mês de 30 dias para garantia sem validação contratual.
+## 2. Topologia de Inversores e Herança de Usina (UCS001)
+- O CA-2.1.2.1.11 estipula que a Usina da turbina é herdada do Inversor selecionado. Permanece em aberto se a interface deve exibir a Usina desabilitada para edição ou se o campo deve ser totalmente omitido do formulário de cadastro.
 
-2. **Dúvida 02 — Campo "Operadora de Energia" e Vínculos de Posse:**
-   * *Inconsistência:* O CA-2.1.2.1.03 exige o preenchimento da Operadora de Energia, mas o efeito prático e o filtro associado a esse campo estão marcados como pendentes. Faltam decisões sobre a aceitação de potência zero e exigências contratuais de cooperados associados.
+## 3. Matriz de Autorização (UCS001, UCS002, UCS003)
+- Os requisitos originais referenciam papéis de "Administrador", "Gerente" e "Operador" sem fornecer a matriz consolidada de controle de acesso (RBAC) para as rotas de edição de status e de exportação de dados patrimoniais.
 
-3. **Dúvida 03 — Autorização e Matriz de Acesso Indefinidas:**
-   * *Inconsistência:* O *Walkthrough* constatou que a autorização para incluir turbinas, editar o *status* isoladamente e acessar modalidades de exportação não possui fonte documental aprovada, invalidando testes de segurança (RBAC) neste momento.
+## 4. Bloqueio de Exclusão vs. Soft Delete (UCS001)
+- Os critérios CA-2.1.2.4.02 e CA-2.1.2.4.03 determinam o bloqueio de exclusão quando existirem ordens de serviço ou registros de manutenção associados. É necessário esclarecer com os stakeholders se haverá suporte a desativação lógica (*soft delete*) ou se apenas a recusa da exclusão física é adotada.
 
-4. **Dúvida 04 — Tabela de Decisão para Exclusão e Associações:**
-   * *Inconsistência:* Os CA-2.1.2.4.02 e .03 listam bloqueio de exclusão física por "histórico" e "associações críticas" sem delimitar exatamente o que compõe esse conjunto (além de "serviços associados"). 
-
-5. **Dúvida 05 — Interrupção e Comportamento de Exportação Vazia:**
-   * *Inconsistência:* A especificação oferece alternativas incompatíveis (bloqueio vs. geração de arquivo vazio) para a exportação sem resultados, e não prevê como o sistema deve reagir na repetição de uma exclusão que foi executada mas cuja resposta de rede foi perdida.
+## 5. Contrato de Formatação dos Relatórios (UCS002, UCS003)
+- **Layout do PDF Coletivo:** Ao contrário do formato CSV (que define exatamente 13 colunas), o PDF coletivo não possui relação de campos delimitada pela especificação oficial.
+- **Tratamento de Consulta Vazia:** Definir se a exportação em tela com zero registros deve desabilitar os botões de ação ou apresentar diálogo explicativo ao usuário.

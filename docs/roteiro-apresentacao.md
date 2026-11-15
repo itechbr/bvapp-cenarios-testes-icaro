@@ -1,38 +1,41 @@
-# 🎙️ Roteiro de Apresentação (Pitch de 5 Minutos)
+# 🎙️ Roteiro de Apresentação — 5 Minutos
 
 **Aluno:** Ícaro Pontes  
-**Módulo:** Gestão de Ativos - Turbinas Eólicas  
-**Data:** 06/11/2026  
+**Disciplina:** Verificação, Validação e Teste de Software (VVTS)  
+**Módulo:** Gestão de Ativos — Turbinas Eólicas (EPIC-2.1.2)  
 
 ---
 
-### [0:00 - 1:00] Introdução e Estrutura do Mini Projeto
-"Boa tarde a todos e ao professor. Apresento o mini projeto de especificação de cenários de teste para o módulo de **Gestão de Turbinas Eólicas** do BVapp.
-
-A organização do meu repositório no GitHub segue estritamente a arquitetura acordada pelo nosso grupo, inspirada no padrão de testes funcionais do Django/Python. Dentro de `functional_tests/ativos/turbinas_eolicas/`, elaborei **10 cenários de teste** mapeados diretamente sobre as especificações da Epic 2.1.2."
-
----
-
-### [1:00 - 3:00] Destaque: Cenário Integrador UCS001 (CRUD Completo)
-"O coração da minha entrega é o cenário **UCS001 — Manter Turbinas Eólicas**. Para atender com rigor aos critérios da avaliação, este teste engloba as quatro operações fundamentais do CRUD em uma única cadeia integradora:
-
-1. **Inclusão (Create):** Cadastramos a turbina `TB-EOL-001` no *Parque Eólico Serra do Mel* com potência de 4200 kW e rotor de 150 metros.
-2. **Consulta (Read):** Filtramos pelo código `TB-EOL-001` no grid e acessamos a tela de detalhes para garantir que a persistência foi idêntica aos dados inseridos.
-3. **Atualização (Update):** Editamos a potência para 4500 kW e o status para *Em Manutenção*, validando a alteração no banco.
-4. **Exclusão (Delete):** Acionamos a remoção, confirmamos na janela modal e fazemos a busca final para atestar o estado vazio."
+### [0:00 - 0:50] Introdução e Alinhamento Arquitetural
+- "Boa tarde a todos e ao professor. Apresento meu mini projeto individual de especificação de cenários de teste para o módulo de **Gestão de Turbinas Eólicas** do BVapp.
+- Seguindo rigorosamente as diretrizes da disciplina e o feedback do professor:
+  1. Unificamos todo o ciclo de vida do ativo em **1 único teste de CRUD completo (`UCS001 — Manter turbinas eólicas`)**.
+  2. As funcionalidades que não são CRUD foram organizadas em **testes separados para cada funcionalidade**, gerando o teste de **Exportação Coletiva da Consulta (`UCS002`)** e o teste de **Exportação da Ficha Técnica Individual (`UCS003`)**.
+  3. Não existem testes individuais isolados de inclusão, consulta, edição ou exclusão; todas as validações de regras de negócio viraram fluxos alternativos dentro do CRUD."
 
 ---
 
-### [3:00 - 4:15] Estratégia dos Cenários Complementares (UCS002 a UCS010)
-"Além do CRUD feliz, estruturei os outros 9 cenários em três pilares estratégicos de testes de software:
-
-* **Validação de Limites Numéricos (UCS002):** Testei uma turbina *offshore* de 15 MW e rotor de 236 metros para garantir que o banco de dados não sofra perda de precisão ou arredondamento.
-* **Testes de Exceção e Fronteira (UCS003 a UCS007):** Mapeei o comportamento do sistema ao tentar cadastrar dados negativos, consultar ou excluir IDs inexistentes (retornando HTTP 404 tratado ao invés de erro 500) e navegar em uma base zerada.
-* **Funcionalidade de Exportação (UCS008 a UCS010):** Validei a geração de relatórios em CSV/PDF, garantindo que o relatório herde os filtros ativos no grid e que a exportação seja bloqueada em telas sem registros."
+### [0:50 - 2:40] Demonstração do Cenário de CRUD (UCS001)
+- "No arquivo `UCS001_manter_turbinas_eolicas.py`, adotamos estritamente a convenção do exemplo da aula:
+  - Cabeçalho em docstring contendo identificador, objetivo, requisitos relacionados e ator.
+  - **Fluxo Principal (`[FP]`):** É a **Inclusão** (passos 1 a 5 comentados por linha `#`), demonstrando o preenchimento dos campos obrigatórios, herança de usina a partir do inversor e confirmação de sucesso.
+  - **Fluxos Alternativos (`[A...]`):** A partir do passo 6, também em comentários de linha (`#`), cobrimos:
+    - Consulta e Detalhamento (`[A1]`), Atualização (`[A2]`) e Exclusão (`[A3]`).
+    - Validações de campos obrigatórios (`[A4]`), duplicidade de número de série (`[A5]`) e potência inválida (`[A6]`).
+    - Cronologia temporal de datas (`[A7]`) e consistência do par de garantia (`[A8]`).
+    - Alteração rápida de status com confirmação e cancelamento (`[A10]`, `[A11]`).
+    - Bloqueio de exclusão física para turbinas com histórico de ordens de serviço (`[A13]`)."
 
 ---
 
-### [4:15 - 5:00] Rastreabilidade, Dúvidas e Encerramento
-"Toda a suíte possui rastreabilidade mapeada em `docs/matriz-rastreabilidade.md`. Também registrei em `docs/pendencias.md` duas dúvidas de requisitos para alinhamento com os *stakeholders*: a definição entre exclusão física ou *soft delete* para ativos antigos e o limite de registros em relatórios.
+### [2:40 - 4:00] Funcionalidades Não-CRUD (UCS002 e UCS003)
+- "Para o que não é CRUD, estruturamos testes dedicados por funcionalidade:
+  - **UCS002 — Exportar Consulta:** Cobre a extração em lote da listagem filtrada para arquivos CSV (com as 13 colunas obrigatórias) e PDF consolidado, assegurando abrangência além da página visível, filtros combinados (AND), prevenção contra duplo clique e tratamento de consulta vazia.
+  - **UCS003 — Exportar Ficha Individual:** Cobre a geração diagramada da ficha técnica em PDF de um equipamento específico na tela de detalhes, garantindo o isolamento dos dados da turbina selecionada e tratamento para identificadores inexistentes."
 
-O repositório está organizado, documentado e pronto para reuso em futuras etapas de automação. Muito obrigado!"
+---
+
+### [4:00 - 5:00] Rastreabilidade, Dúvidas de Requisitos e Encerramento
+- "Em `docs/matriz-rastreabilidade.md`, todos os critérios de aceitação da Epic 2.1.2 estão mapeados aos fluxos.
+- Em `docs/pendencias.md`, registrei ambiguidades reais encontradas na especificação de origem, como a conversão de unidades de potência (W para kW) e as regras de exclusão definitiva.
+- A entrega é puramente documental, padronizada e pronta para fundamentar futuras etapas de automação de testes funcionais. Muito obrigado!"
